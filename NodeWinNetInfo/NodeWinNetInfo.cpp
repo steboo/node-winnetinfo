@@ -66,11 +66,11 @@ namespace WinNetInfo {
 			}
 				
 			r->Set(String::NewSymbol("dnsServers"), dns);
-			r->Set(String::NewSymbol("dnsEnabled"), Boolean::New(pFixedInfo->EnableDns));
+			r->Set(String::NewSymbol("dnsEnabled"), Boolean::New(pFixedInfo->EnableDns != 0));
 			r->Set(String::NewSymbol("nodeType"), Number::New(pFixedInfo->NodeType));
 			r->Set(String::NewSymbol("domain"), String::NewSymbol(pFixedInfo->DomainName));
-			r->Set(String::NewSymbol("arpProxyEnabled"), Boolean::New(pFixedInfo->EnableProxy));
-			r->Set(String::NewSymbol("routingEnabled"), Boolean::New(pFixedInfo->EnableRouting));
+			r->Set(String::NewSymbol("arpProxyEnabled"), Boolean::New(pFixedInfo->EnableProxy != 0));
+			r->Set(String::NewSymbol("routingEnabled"), Boolean::New(pFixedInfo->EnableRouting != 0));
 			r->Set(String::NewSymbol("dhcpScope"), String::NewSymbol(pFixedInfo->ScopeId));
 
 
@@ -89,14 +89,14 @@ namespace WinNetInfo {
 		return scope.Close(Undefined());
 
 	}
-}
 
-extern "C" void NODE_EXTERN init (Handle<Object> target)
-{
-	HandleScope scope;
-	Local<FunctionTemplate> get = FunctionTemplate::New(WinNetInfo::Get);
-	
-	target->Set(String::NewSymbol("getNetworkParams"), get->GetFunction());
-}
+	void init (Handle<Object> target)
+	{
+		HandleScope scope;
+		Local<FunctionTemplate> get = FunctionTemplate::New(WinNetInfo::Get);
 
-NODE_MODULE(NodeWinNetInfo, init)
+		target->Set(String::NewSymbol("getNetworkParams"), get->GetFunction());
+	}
+
+	NODE_MODULE(NodeWinNetInfo, init)
+}
